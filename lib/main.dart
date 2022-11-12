@@ -1,3 +1,4 @@
+import 'package:country_tracker/screens/AllCountries.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,19 +13,6 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AllCountries(),
-    );
-  }
-}
-
-class AllCountries extends StatelessWidget {
-  const AllCountries({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Countries'),
-      ),
     );
   }
 }
