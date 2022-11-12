@@ -40,6 +40,7 @@ class _AllCountriesState extends State<AllCountries> {
             if (snapshot.hasData) {
               print(snapshot.data);
               return ListView.builder(
+                itemCount: 260,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
@@ -78,7 +79,16 @@ class _AllCountriesState extends State<AllCountries> {
             }
             return Center(
               child: Column(
-                children: [Text('Something went wrong')],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                ],
               ),
             );
           },
