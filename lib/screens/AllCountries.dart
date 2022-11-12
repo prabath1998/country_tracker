@@ -45,21 +45,30 @@ class _AllCountriesState extends State<AllCountries> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              Country(snapshot.data![index]['name']),
+                          builder: (context) => Country(snapshot.data![index]),
                         ),
                       );
                     },
                     child: Card(
-                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      margin: const EdgeInsets.all(8),
+                      color: Colors.amber[200],
+                      elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 8),
-                        child: Text(
-                          snapshot.data![index]['name'],
-                          style: const TextStyle(
-                            fontSize: 18,
-                          ),
+                            vertical: 20, horizontal: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              snapshot.data![index]['name'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
