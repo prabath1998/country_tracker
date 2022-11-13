@@ -38,7 +38,6 @@ class _AllCountriesState extends State<AllCountries> {
           future: countries,
           builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data);
               return ListView.builder(
                 itemCount: 260,
                 itemBuilder: (BuildContext context, int index) {
