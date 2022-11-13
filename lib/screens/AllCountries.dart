@@ -28,8 +28,9 @@ class _AllCountriesState extends State<AllCountries> {
 
   void _filterCountries(value) {
     setState(() {
-      filteredCountries =
-          (countries.where((country) => country['name'] == 'India')).toList();
+      filteredCountries = countries
+          .where((country) => country['name'].toLowerCase().contains(value))
+          .toList();
     });
   }
 
@@ -69,6 +70,7 @@ class _AllCountriesState extends State<AllCountries> {
                   onPressed: () {
                     setState(() {
                       isSearching = false;
+                      filteredCountries = countries;
                     });
                   },
                 )
