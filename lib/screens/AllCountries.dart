@@ -10,17 +10,26 @@ class AllCountries extends StatefulWidget {
 }
 
 class _AllCountriesState extends State<AllCountries> {
-  late Future<List> countries;
+  List countries = [];
+  bool isSearching = false;
 
   @override
   void initState() {
     // TODO: implement initState
-    countries = getCountries();
+    getCountries().then((data) {
+      setState(() {
+        countries = data;
+      });
+    });
 
     super.initState();
   }
 
-  Future<List> getCountries() async {
+  void _filterCountries(value) {
+    print(value);
+  }
+
+  getCountries() async {
     var response = await Dio().get('https://restcountries.com/v2/all');
     return response.data;
   }
@@ -30,22 +39,56 @@ class _AllCountriesState extends State<AllCountries> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pinkAccent,
-        title: const Text('All Countries'),
+        title: !isSearching
+            ? const Text('All Countries')
+            : TextField(
+                onChanged: (value) {
+                  _filterCountries(value);
+                },
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Search country here',
+                  hintStyle: TextStyle(color: Colors.white, fontSize: 18),
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+        actions: [
+          isSearching
+              ? IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    setState(() {
+                      isSearching = false;
+                    });
+                  },
+                )
+              : IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      isSearching = true;
+                    });
+                  },
+                ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: FutureBuilder<List>(
-          future: countries,
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: 260,
+        child: countries.length > 0
+            ? ListView.builder(
+                itemCount: countries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Country(snapshot.data![index]),
+                          builder: (context) => Country(countries[index]),
                         ),
                       );
                     },
@@ -53,19 +96,24 @@ class _AllCountriesState extends State<AllCountries> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)),
                       margin: const EdgeInsets.all(8),
-                      color: Colors.amber[200],
+                      color: Colors.deepPurpleAccent,
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 8),
+                            vertical: 30, horizontal: 4),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              snapshot.data![index]['name'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  countries[index]['name'],
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -74,24 +122,12 @@ class _AllCountriesState extends State<AllCountries> {
                     ),
                   );
                 },
-              );
-            }
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      color: Colors.pinkAccent,
-                    ),
-                  ),
-                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.pink,
+                ),
               ),
-            );
-          },
-        ),
       ),
     );
   }
