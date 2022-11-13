@@ -11,6 +11,7 @@ class AllCountries extends StatefulWidget {
 
 class _AllCountriesState extends State<AllCountries> {
   List countries = [];
+  List filteredCountries = [];
   bool isSearching = false;
 
   @override
@@ -18,7 +19,7 @@ class _AllCountriesState extends State<AllCountries> {
     // TODO: implement initState
     getCountries().then((data) {
       setState(() {
-        countries = data;
+        countries = filteredCountries = data;
       });
     });
 
@@ -26,7 +27,10 @@ class _AllCountriesState extends State<AllCountries> {
   }
 
   void _filterCountries(value) {
-    print(value);
+    setState(() {
+      filteredCountries =
+          (countries.where((country) => country['name'] == 'India')).toList();
+    });
   }
 
   getCountries() async {
@@ -80,15 +84,16 @@ class _AllCountriesState extends State<AllCountries> {
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: countries.length > 0
+        child: filteredCountries.length > 0
             ? ListView.builder(
-                itemCount: countries.length,
+                itemCount: filteredCountries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Country(countries[index]),
+                          builder: (context) =>
+                              Country(filteredCountries[index]),
                         ),
                       );
                     },
@@ -97,7 +102,7 @@ class _AllCountriesState extends State<AllCountries> {
                           borderRadius: BorderRadius.circular(20.0)),
                       margin: const EdgeInsets.all(8),
                       color: Colors.deepPurpleAccent,
-                      elevation: 5,
+                      elevation: 10,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 30, horizontal: 4),
@@ -107,9 +112,9 @@ class _AllCountriesState extends State<AllCountries> {
                             Expanded(
                               child: Center(
                                 child: Text(
-                                  countries[index]['name'],
+                                  filteredCountries[index]['name'],
                                   style: const TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
